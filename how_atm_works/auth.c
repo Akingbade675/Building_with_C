@@ -1,29 +1,50 @@
-#include "main.h"
+#include "atm.h"
 
-extern int pword;
-extern int cardNo;
+int pword, i;
+int *arr_pass;
 
-int auth(void)
+int cPass(void)
 {
-	int *arr_pass;
-	int n, i;
-	int _cardNo = cardNo;
-
-	arr_pass = malloc(sizeof(*arr_pass) * 4);
-
 	for (i = 3; i >= 0; i--)
 	{
-		n = _cardNo % 10;
-		arr_pass[i] = n;
 		if (arr_pass[i] != (pword % 10))
 		{
 			printf("Incorrect Pin, try again\n");
 			return (1);
 		}
-		_cardNo /= 10;
 		pword /= 10;
 	}
-	free(arr_pass);
 
 	return (0);
+}
+
+void auth(struct User *u)
+{
+	int bool;
+
+	arr_pass = u->pin;
+	for (i = 0; i < 3; i++)
+	{
+		printf("Please Enter your Four digit PIN number and press ENTER\n");
+		scanf("%d", &pword);
+
+		/* authenticate PIN */
+		bool = cPass();
+
+		if (!bool)
+		{
+			printf("Correct PIN\n");
+			return;
+		}
+		else
+		{
+			if (i == 2)
+			{
+				printf("You have entered incorrect PIN more than 3 times\n");
+				printf("Your account has been blocked for 24hours\n");
+				exit(1);
+			}
+			continue;
+		}
+	}
 }

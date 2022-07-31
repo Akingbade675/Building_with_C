@@ -1,7 +1,8 @@
-#include "main.h"
+#include "atm.h"
 
 int cardNo;
-int i, pword, transNo;
+int transNo;
+User *current_user;
 
 int main(void)
 {
@@ -11,28 +12,17 @@ int main(void)
 	/* check if card is fake or original */
 	isfake();
 
-	for (i = 0; i < 3; i++)
-	{
-		printf("Please Enter your Four digit PIN number and press ENTER\n");
-		scanf("%d", &pword);
+	current_user = bankNetwork();
+	auth(current_user);
+	printf("Transactions\n");
+	printf("1- Transfer\t\t2- Withdrawal\n");
+	printf("3- Inquiry\t\t4- Bill Payment\n");
+	printf("4- Check deposit\t6- Cash deposit\n");
 
-		/* authenticate PIN */
-		int bool = auth();
-		if (!bool)
-		{	
-			printf("Correct PIN\n");
-			break;
-		}
-		else
-		{
-			if (i == 2)
-			{
-				printf("You have entered incorrect PIN more than 3 times\nYour account has been blocked for 24hours\n");
-				return (1);
-			}
-			continue;
-		}
-	}
+	printf("Enter selected transaction number: ");
+	scanf("%d", &transNo);
+
+	transaction(current_user);
 	return (0);
 }
 
